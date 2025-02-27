@@ -1,3 +1,4 @@
+import Utils.BaseClass;
 import Utils.ValidationUtil;
 import org.testng.annotations.Test;
 
@@ -5,17 +6,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class GeoLocationTests {
+public class GeoLocationTests extends BaseClass {
     OpenWeatherApiClient apiClient = new OpenWeatherApiClient();
 
     @Test
-    public void testValidCityAndState() {
+    public void test_Valid_City_And_State() {
         List<String> locations = List.of("Madison, WI");
 
         // Fetch location data
         Map<String, Map<String, Object>> locationData = apiClient.getLocationData(locations);
 
-        ValidationUtil.validate("Validating data is received for Madison:",locationData.isEmpty(),false);
+        ValidationUtil.validate("Validating data is received for Madison,WI:",locationData.isEmpty(),false);
         ValidationUtil.validate("Validating name matches:",locationData.get("Madison, WI").get("name"),"Madison");
         ValidationUtil.validate("Validating state matches:",locationData.get("Madison, WI").get("state"),"Wisconsin");
         ValidationUtil.validate("Validating latitude is retrieved:",locationData.get("Madison, WI").get("latitude").toString().isEmpty(), false);
@@ -24,7 +25,7 @@ public class GeoLocationTests {
     }
 
     @Test
-    public void testValidZipCode() {
+    public void test_Valid_ZipCode() {
         String zip1 = "10001";
         String zip2 = "33024";
         List<String> locations = Arrays.asList(zip1, zip2);
@@ -47,7 +48,7 @@ public class GeoLocationTests {
     }
 
     @Test
-    public void testMultipleValidLocations() {
+    public void test_Multiple_Valid_Locations() {
         String city1 = "Orlando, FL";
         String zip1 = "Chicago, IL";
         String city2 = "33004";
@@ -62,29 +63,29 @@ public class GeoLocationTests {
     }
 
     @Test
-    public void testInvalidCityAndState() {
+    public void test_Invalid_City_And_State() {
         List<String> locations = List.of("Miami, NY");
 
         // Fetch location data
         Map<String, Map<String, Object>> locationData = apiClient.getLocationData(locations);
 
-        ValidationUtil.validate("Validating no data is received for invalid city-state combination", locationData.isEmpty());
+        ValidationUtil.validate("Validating no data is received for invalid city-state combination:", locationData.isEmpty());
 
     }
 
     @Test
-    public void testInvalidZipCode() {
+    public void test_Invalid_ZipCode() {
         List<String> locations = Arrays.asList("00000");
 
         // Fetch location data
         Map<String, Map<String, Object>> locationData = apiClient.getLocationData(locations);
 
-        ValidationUtil.validate("Validating no data is received for invalid zipcode", locationData.isEmpty());
+        ValidationUtil.validate("Validating no data is received for invalid zipcode:", locationData.isEmpty());
 
     }
 
     @Test
-    public void testInvalidAndInvalidInput() {
+    public void test_Valid_And_Invalid_Combination_Input() {
         String city1 = "Orlando, FL";
         String city2 = "Fake@City, IL";
         String zip1 = "33004";
@@ -95,7 +96,7 @@ public class GeoLocationTests {
         Map<String, Map<String, Object>> locationData = apiClient.getLocationData(locations);
 
         ValidationUtil.validate("Validating data is received for multiple inputs:",locationData.size()==2);
-        ValidationUtil.validate(city1 + " is retrieved",locationData.containsKey(city1));
-        ValidationUtil.validate(zip1 + " is retrieved",locationData.containsKey(zip1));
+        ValidationUtil.validate(city1 + " is retrieved:",locationData.containsKey(city1));
+        ValidationUtil.validate(zip1 + " is retrieved:",locationData.containsKey(zip1));
     }
 }

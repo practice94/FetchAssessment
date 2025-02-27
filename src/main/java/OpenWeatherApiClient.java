@@ -1,3 +1,4 @@
+import Utils.ValidationUtil;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.restassured.RestAssured;
@@ -17,6 +18,7 @@ public class OpenWeatherApiClient {
         Map<String, Map<String, Object>> results = new HashMap<>();
 
         for (String location : locations) {
+            ValidationUtil.log("Location: "+location);
             Response response;
 
             if (location.matches("\\d{5}")) { // Check if input is a ZIP code
@@ -24,6 +26,7 @@ public class OpenWeatherApiClient {
             } else { // Otherwise, it's assumed to be a city/state
                 response = getLocationByCityState(location);
             }
+
 
             if (response != null && response.statusCode() == 200) {
                 // Convert response to JsonElement
