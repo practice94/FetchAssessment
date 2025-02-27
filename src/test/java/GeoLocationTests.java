@@ -40,7 +40,7 @@ public class GeoLocationTests extends BaseClass {
         ValidationUtil.validate("Validating latitude is retrieved:",locationData.get(zip1).get("latitude").toString().isEmpty(), false);
         ValidationUtil.validate("Validating longitude is retrieved:",locationData.get(zip1).get("longitude").toString().isEmpty(),false);
 
-        ValidationUtil.validate("Validating name matches for 90210:",locationData.get(zip2).get("name"),"Pembroke Pines");
+        ValidationUtil.validate("\nValidating name matches for 90210:",locationData.get(zip2).get("name"),"Pembroke Pines");
         ValidationUtil.validate("Validating name matches:",locationData.get(zip2).get("zip"),zip2);
         ValidationUtil.validate("Validating latitude is retrieved:",locationData.get(zip2).get("latitude").toString().isEmpty(), false);
         ValidationUtil.validate("Validating longitude is retrieved:",locationData.get(zip2).get("longitude").toString().isEmpty(),false);
@@ -75,7 +75,7 @@ public class GeoLocationTests extends BaseClass {
 
     @Test
     public void test_Invalid_ZipCode() {
-        List<String> locations = Arrays.asList("00000");
+        List<String> locations = List.of("00000");
 
         // Fetch location data
         Map<String, Map<String, Object>> locationData = apiClient.getLocationData(locations);
