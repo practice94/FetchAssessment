@@ -12,8 +12,6 @@ public class OpenWeatherApiClient {
     private static final String BASE_URL = "http://api.openweathermap.org/geo/1.0/";
     private final LocationParser locationParser = new LocationParser(); // Create an instance of LocationParser
 
-    //http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid={API key}
-    //http://api.openweathermap.org/geo/1.0/zip?zip={zip code},{country code}&appid={API key}
 
     public Map<String, Map<String, Object>> getLocationData(List<String> locations) {
         Map<String, Map<String, Object>> results = new HashMap<>();
