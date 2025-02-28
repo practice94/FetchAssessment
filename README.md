@@ -10,8 +10,8 @@ This project tests the geolocation functionality using Java and TestNG. It is a 
 ## Setup
 1. Clone the repository:
    ```sh
-   git clone https://github.com/practice94/FetchSDET.git
-   cd FetchSDET
+   git clone https://github.com/practice94/FetchAssessment.git
+   cd FetchAssessment
    ```
 2. Ensure Maven and Java are installed:
    ```sh
