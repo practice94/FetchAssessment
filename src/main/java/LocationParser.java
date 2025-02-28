@@ -7,6 +7,9 @@ import java.util.Map;
 
 public class LocationParser {
 
+    /*
+    Retrieve all the required location details from the response body
+     */
     public Map<String, Object> retrieveLocationData(JsonObject jsonResponse) {
         Map<String, Object> locationData = new HashMap<>();
 
@@ -24,6 +27,9 @@ public class LocationParser {
         return locationData;
     }
 
+    /*
+    convert the response string into json elements
+     */
     public JsonElement convertStringToJsonElement(String jsonResponse) {
         return JsonParser.parseString(jsonResponse);
     }

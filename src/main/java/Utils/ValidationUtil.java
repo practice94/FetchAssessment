@@ -7,31 +7,26 @@ import org.testng.Assert;
 public class ValidationUtil {
     private static final Logger logger = LogManager.getLogger(ValidationUtil.class);
 
+    /*
+    Logs description in the console
+     */
     public static void log(String description){
         logger.info(description);
     }
 
+    /*
+    Validate/Assert the actual and expected result and Logs description
+    */
     public static void validate(String description, Object actual, String expected){
         log(description+actual);
         Assert.assertEquals(actual.toString(),expected);
     }
-
-    public static void validate(String description, boolean actual, boolean expected) {
-        log(description+actual);
-
-        if(!expected)
-            Assert.assertFalse(actual);
-        else
-            Assert.assertTrue(actual);
-    }
-
+    /*
+    Validate/Assert the actual is true or false and Logs description
+     */
     public static void validate(String description, boolean actual) {
         log(description+actual);
         Assert.assertTrue(actual);
 
-    }
-
-    public static void warn(String description, boolean condition) {
-        logger.warn(description,condition);
     }
 }
