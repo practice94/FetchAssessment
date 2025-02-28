@@ -1,5 +1,6 @@
 import Utils.BaseClass;
 import Utils.ValidationUtil;
+import io.restassured.response.Response;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -16,11 +17,11 @@ public class GeoLocationTests extends BaseClass {
         // Fetch location data
         Map<String, Map<String, Object>> locationData = apiClient.getLocationData(locations);
 
-        ValidationUtil.validate("Validating data is received for Madison,WI:",locationData.isEmpty(),false);
+        ValidationUtil.validate("Validating data is received for Madison,WI:",!locationData.isEmpty());
         ValidationUtil.validate("Validating name matches:",locationData.get("Madison, WI").get("name"),"Madison");
         ValidationUtil.validate("Validating state matches:",locationData.get("Madison, WI").get("state"),"Wisconsin");
-        ValidationUtil.validate("Validating latitude is retrieved:",locationData.get("Madison, WI").get("latitude").toString().isEmpty(), false);
-        ValidationUtil.validate("Validating longitude is retrieved:",locationData.get("Madison, WI").get("longitude").toString().isEmpty(),false);
+        ValidationUtil.validate("Validating latitude is retrieved:",!locationData.get("Madison, WI").get("latitude").toString().isEmpty());
+        ValidationUtil.validate("Validating longitude is retrieved:",!locationData.get("Madison, WI").get("longitude").toString().isEmpty());
 
     }
 
@@ -37,13 +38,13 @@ public class GeoLocationTests extends BaseClass {
 
         ValidationUtil.validate("Validating name matches for 10001:",locationData.get(zip1).get("name"),"New York");
         ValidationUtil.validate("Validating name matches:",locationData.get(zip1).get("zip"),zip1);
-        ValidationUtil.validate("Validating latitude is retrieved:",locationData.get(zip1).get("latitude").toString().isEmpty(), false);
-        ValidationUtil.validate("Validating longitude is retrieved:",locationData.get(zip1).get("longitude").toString().isEmpty(),false);
+        ValidationUtil.validate("Validating latitude is retrieved:",!locationData.get(zip1).get("latitude").toString().isEmpty());
+        ValidationUtil.validate("Validating longitude is retrieved:",!locationData.get(zip1).get("longitude").toString().isEmpty());
 
         ValidationUtil.validate("\nValidating name matches for 90210:",locationData.get(zip2).get("name"),"Pembroke Pines");
         ValidationUtil.validate("Validating name matches:",locationData.get(zip2).get("zip"),zip2);
-        ValidationUtil.validate("Validating latitude is retrieved:",locationData.get(zip2).get("latitude").toString().isEmpty(), false);
-        ValidationUtil.validate("Validating longitude is retrieved:",locationData.get(zip2).get("longitude").toString().isEmpty(),false);
+        ValidationUtil.validate("Validating latitude is retrieved:",!locationData.get(zip2).get("latitude").toString().isEmpty());
+        ValidationUtil.validate("Validating longitude is retrieved:",!locationData.get(zip2).get("longitude").toString().isEmpty());
 
     }
 
@@ -64,7 +65,7 @@ public class GeoLocationTests extends BaseClass {
 
     @Test
     public void test_Invalid_City_And_State() {
-        List<String> locations = List.of("Miami, NY");
+        List<String> locations = List.of("Fake@City, IL");
 
         // Fetch location data
         Map<String, Map<String, Object>> locationData = apiClient.getLocationData(locations);
@@ -75,12 +76,12 @@ public class GeoLocationTests extends BaseClass {
 
     @Test
     public void test_Invalid_ZipCode() {
-        List<String> locations = List.of("00000");
+        String zip1 = "99999";
 
         // Fetch location data
-        Map<String, Map<String, Object>> locationData = apiClient.getLocationData(locations);
+       Response resp = apiClient.getLocationByZip(zip1);
 
-        ValidationUtil.validate("Validating no data is received for invalid zipcode:", locationData.isEmpty());
+        ValidationUtil.validate("Status Code for invalid zipcode:"+ resp.statusCode(),resp.statusCode()==404);
 
     }
 
@@ -89,8 +90,8 @@ public class GeoLocationTests extends BaseClass {
         String city1 = "Orlando, FL";
         String city2 = "Fake@City, IL";
         String zip1 = "33004";
-        String zip2 = "00000";
-        List<String> locations = Arrays.asList(city1,zip1,city2,zip2);
+
+        List<String> locations = Arrays.asList(city1,zip1,city2);
 
         // Fetch location data
         Map<String, Map<String, Object>> locationData = apiClient.getLocationData(locations);

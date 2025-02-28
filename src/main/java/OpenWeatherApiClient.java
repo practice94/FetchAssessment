@@ -18,7 +18,7 @@ public class OpenWeatherApiClient {
         Map<String, Map<String, Object>> results = new HashMap<>();
 
         for (String location : locations) {
-            ValidationUtil.log("Location: "+location);
+            ValidationUtil.log("Location: " + location);
             Response response;
 
             if (location.matches("\\d{5}")) { // Check if input is a ZIP code
@@ -27,26 +27,26 @@ public class OpenWeatherApiClient {
                 response = getLocationByCityState(location);
             }
 
+            ValidationUtil.validate("Response Status code:"+response.statusCode(),response.statusCode()==200);
 
-            if (response != null && response.statusCode() == 200) {
-                // Convert response to JsonElement
-                JsonElement jsonResponse = locationParser.convertStringToJsonElement(response.asString());
+            // Convert response to JsonElement
+            JsonElement jsonResponse = locationParser.convertStringToJsonElement(response.asString());
 
-                // Handle both JSON Object and Array
-                if (jsonResponse.isJsonArray() && !jsonResponse.getAsJsonArray().isEmpty()) {
-                    JsonObject firstLocation = jsonResponse.getAsJsonArray().get(0).getAsJsonObject();
-                    results.put(location, locationParser.retrieveLocationData(firstLocation)); // Use LocationParser
-                }
-                else if (jsonResponse.isJsonObject()) {
-                    JsonObject locationObject = jsonResponse.getAsJsonObject();
-                    results.put(location, locationParser.retrieveLocationData(locationObject)); // Use LocationParser
-                }
+            // Handle both JSON Object and Array
+            if (jsonResponse.isJsonArray() && !jsonResponse.getAsJsonArray().isEmpty()) {
+                JsonObject firstLocation = jsonResponse.getAsJsonArray().get(0).getAsJsonObject();
+                results.put(location, locationParser.retrieveLocationData(firstLocation)); // Use LocationParser
+            } else if (jsonResponse.isJsonObject()) {
+                JsonObject locationObject = jsonResponse.getAsJsonObject();
+                results.put(location, locationParser.retrieveLocationData(locationObject)); // Use LocationParser
+
             }
         }
         return results;
     }
 
-    private Response getLocationByZip(String zip) {
+    public Response getLocationByZip(String zip) {
+
         return RestAssured
                 .given()
                 .baseUri(BASE_URL)
@@ -57,11 +57,10 @@ public class OpenWeatherApiClient {
                 .get();
     }
 
-    private Response getLocationByCityState(String location) {
+    public Response getLocationByCityState(String location) {
         String[] parts = location.split(",");
         if (parts.length < 2) {
-            System.out.println("Invalid input format: " + location);
-            return null; // Skip invalid inputs
+            throw new RuntimeException("Invalid input. Please follow City, ST format");
         }
 
         String formattedLocation = parts[0].trim() + "," + parts[1].trim() + ",US"; // Format correctly
